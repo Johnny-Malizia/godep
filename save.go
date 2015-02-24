@@ -218,21 +218,7 @@ func carryVersion(a *Godeps, db *Dependency) error {
 			return nil
 		}
 	}
-	// No exact match, check for child or sibling package.
-	// We can't handle mismatched versions for packages in
-	// the same repo, so report that as an error.
-	for _, da := range a.Deps {
-		switch {
-		case strings.HasPrefix(db.ImportPath, da.ImportPath+"/"):
-			if da.Rev != db.Rev {
-				return &revError{db.ImportPath, db.Rev, da.Rev}
-			}
-		case strings.HasPrefix(da.ImportPath, db.root+"/"):
-			if da.Rev != db.Rev {
-				return &revError{db.ImportPath, db.Rev, da.Rev}
-			}
-		}
-	}
+
 	// No related package in the list, must be a new repo.
 	return nil
 }

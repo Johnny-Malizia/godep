@@ -117,7 +117,7 @@ func LoadVCSAndUpdate(deps []Dependency) ([]Dependency, error) {
 	if err != nil {
 		return nil, err
 	}
-	noupdate := make(map[string]bool) // repo roots
+
 	var candidates []*Dependency
 	var tocopy []Dependency
 	for i := range deps {
@@ -150,8 +150,6 @@ func LoadVCSAndUpdate(deps []Dependency) ([]Dependency, error) {
 		dep.vcs = vcs
 		if dep.matched {
 			candidates = append(candidates, dep)
-		} else {
-			noupdate[dep.root] = true
 		}
 	}
 	if err1 != nil {
@@ -161,9 +159,7 @@ func LoadVCSAndUpdate(deps []Dependency) ([]Dependency, error) {
 	for _, dep := range candidates {
 		dep.dir = dep.pkg.Dir
 		dep.ws = dep.pkg.Root
-		if noupdate[dep.root] {
-			continue
-		}
+
 		id, err := dep.vcs.identify(dep.pkg.Dir)
 		if err != nil {
 			log.Println(err)
